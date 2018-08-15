@@ -17,11 +17,40 @@ class AdminController extends Controller
         return view('users.add_user');
     }
 
-
-    public function index()
+//for excel upload
+    public function import_user()
     {
-        //
+        return view('users.import-user');
     }
+
+    public function handle_import(Request &$request){
+        $validator =Validator::make($request->all(), [
+            'file'=>'required',
+
+            ]);
+        if ($validator->fails()){
+            return redirect()->back()->withErrors($validator);
+        }
+        $file =$request->file('file');
+        $csvData =file_get_contents($file);
+        $rows =array_map('str_getcsv',explode("\n",$csvData));
+        $header =array_shift($rows);
+
+        foreach ($rows as $row){
+            $row = array_combine($header,$row);
+
+            User::create([
+                'reg' =>$row['reg'],
+                'password' =>bcrypt(uniqid()),
+
+            ]);
+            flash('Users are imported successful');
+            return redirect()->back();
+        }
+
+    }
+
+
     public function charts(){
         return view('charts');
     }

@@ -4,9 +4,22 @@
     Add Students
     @endsection
 @section('content')
+        <div class="row">
+            <div class="col-lg-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="overview-wrap">
+                    <a class="btn btn-primary" href="{{route('import_user')}}" role="button">Upload Users</a>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+
+
 <div class="card">
     <div class="card-header">
-        <strong>Fill All</strong> Fields
+        <strong>Register Students</strong>
     </div>
     <div class="card-body card-block">
         <form action="{{route('store')}}" method="post" class="">
@@ -22,21 +35,6 @@
                 @endif
             </div>
 
-            {{--<div class="form-group">--}}
-                {{--<label for="password" class=" form-control-label">Password:</label>--}}
-                {{--<input type="password" id="password" name="password" class="form-control" required>--}}
-                {{--<span class="help-block">Please the password</span>--}}
-            {{--</div>--}}
-            {{--<div class="form-group">--}}
-                {{--<label for="confirm" class=" form-control-label">Password Confirmation:</label>--}}
-                {{--<input type="password" id="confirm" name="confirm"  class="form-control" required>--}}
-                {{--<span class="help-block">Please the password</span>--}}
-            {{--</div>--}}
-            {{--<div class="form-group">--}}
-                {{--<button for="button" class=" btn-danger">Submit:</button>--}}
-                {{--<input type="submit" id="confirm" name="submit"  class="form-control">--}}
-                {{--<span class="help-block">Please the password</span>--}}
-            {{--</div>--}}
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-lg>

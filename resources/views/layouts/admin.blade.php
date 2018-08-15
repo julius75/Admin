@@ -32,6 +32,11 @@
 
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap JS-->
+    <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
 
 </head>
 
@@ -88,7 +93,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="{{route('add_user')}}">
+                        <a href="{{route('suggestion')}}">
                             <i class="fas fa-table"></i>Suggestions</a>
                     </li>
                     <li>
@@ -155,15 +160,6 @@
         <div class="main-content">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="overview-wrap">
-                                <h2 class="title-1">overview</h2>
-                                <button class="au-btn au-btn-icon au-btn--blue">
-                                    <i class="zmdi zmdi-plus"></i>Upload Users</button>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row m-t-25">
 
 
