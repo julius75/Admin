@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Suggestion;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use  App\Students;
 use Illuminate\Support\Facades\Hash;
+//use Knp\Snappy\Pdf;
+use PDF;
 
 class AdminController extends Controller
 {
@@ -23,30 +27,39 @@ class AdminController extends Controller
         return view('users.import-user');
     }
 
-    public function handle_import(Request &$request){
-        $validator =Validator::make($request->all(), [
-            'file'=>'required',
+    public function handle_import(Request $request){
+
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator);
+        }
+
+        $file = $request->file('file');
+        $csvData = file_get_contents($file);
+
+        $rows = array_map("str_getcsv", explode("\n", $csvData));
+        $header = array_shift($rows);
+        //dd($rows);
+        foreach ($rows as $row) {
+            $row = array_combine($header, $row);
+            Students::create([
+                'first_name' => $row['first_name'],
+                'last_name' => $row['last_name'],
+                'reg' => $row['reg'],
+              'password' => bcrypt($row['password']),
+               // 'password' =>$row['password'],
+
 
             ]);
-        if ($validator->fails()){
-            return redirect()->back()->withErrors($validator);
+
         }
-        $file =$request->file('file');
-        $csvData =file_get_contents($file);
-        $rows =array_map('str_getcsv',explode("\n",$csvData));
-        $header =array_shift($rows);
-
-        foreach ($rows as $row){
-            $row = array_combine($header,$row);
-
-            User::create([
-                'reg' =>$row['reg'],
-                'password' =>bcrypt(uniqid()),
-
-            ]);
-            flash('Users are imported successful');
-            return redirect()->back();
-        }
+//        flash('Users imported');
+//        return redirect()->back();
 
     }
 
@@ -56,7 +69,9 @@ class AdminController extends Controller
     }
 
     public function view_users(){
-        return view('users.view_user');
+        $users=Students::orderBY('created_at','desc')->paginate(5);
+        $number=1;
+        return view('users.view_user',compact('users','number'));
     }
     public function warn_users(){
         return view('users.warn_user');
@@ -67,7 +82,44 @@ class AdminController extends Controller
     }
 
     public function suggestion(){
-        return view('users.suggestion');
+        $number=1;
+        $suggestion=Suggestion::orderBy('created_at','desc')->paginate(4);
+        return view('users.suggestion',compact('suggestion','number'));
+    }
+    public function delete_user($id){
+        $student_delete=Students::where('id',$id);
+        if ($student_delete->delete()){
+            flash('User successfully deleted')->success()->important();
+            return back();
+        }
+        flash('An error occurred trying to delete user! Please try again')->error()->important();
+        return back();
+    }
+    public  function edit_user($id){
+        $student=Students::where('id',$id)->first();
+        return view('users.edit',compact('student'));
+    }
+
+    public function update_user(Request $request,$id){
+        $validatedData=$request->validate([
+            'first_name'=>'string|required|min:4|max:10',
+            'last_name'=>'string|required|min:4|max:10',
+            'reg'=>'required|min:10|max:13|string',
+        ]);
+      if ($validatedData){
+          $student_update=Students::where('id',$id)
+              ->update([
+                  'first_name'=>$request->input('first_name'),
+                  'last_name'=>$request->input('last_name'),
+                  'reg'=>$request->input('reg'),
+              ]);
+          if ($student_update){
+              flash('User information updated successfully')->success()->important();
+              return redirect('/view-user');
+          }
+          flash('An error occurred while trying to update user information! Please try again')->error()->important();
+          return back();
+      }
     }
 
 
@@ -89,18 +141,16 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-//        $this->validate($request,[
-//            'reg' => 'required|unique:posts|max:255',
-//            'password' => 'required',
-//            'confirm' => 'required',
-//
-//        ]);
-        //create a user
+
         $validatedData=$request->validate([
+            'first_name'=>'string|required|min:4|max:10',
+           'last_name'=>'string|required|min:4|max:10',
            'reg'=>'required|min:10|max:13|string|unique:students',
         ]);
         if ($validatedData){
             $student_save=Students::create([
+                'first_name'=>$request->input('first_name'),
+                'last_name'=>$request->input('last_name'),
                 'reg'=>$request->input('reg'),
                 'password'=>Hash::make($request->input('reg')),
 
@@ -114,24 +164,39 @@ class AdminController extends Controller
         }
 
 
-//        $student = new Students;
-//        $student->reg = $request->input('reg');
-//        $student->password = $request->input('password');
-//        $student->confirm = $request->input('confirm');
-//        $student->save();
 
 
+    }
+    public function send_reply(Request $request,$id){
+        if (strlen($request->input('reply'))<=4){
+            flash('Response too short to be sent')->error();
+            return back();
+        }
+        else{
+            $suggestion=Suggestion::where('id',$id)->first();
+            $response=Suggestion::where('id',$id)
+                ->update([
+                    'reply'=>$request->input('reply'),
+                ]);
+            if ($response){
+                flash('Feedback on '.$suggestion->title.' Successfully sent')->success()->important();
+                return redirect()->back();
+            }
+            flash('An error occurred while trying to send the feedback! Please try again')->error()->important();
+            return redirect()->back();
+        }
 
-        //return 123;
+
+    }
+    public function print_suggestion(){
+       $suggestion=Suggestion::orderBy('created_at','desc')->paginate(10);
+        $number=1;
+//        return view('users.print_suggestions',compact('suggestion','number'));
+       $pdf = PDF::loadView('users.print_suggestions',compact('suggestion','number'));
+       return $pdf->download('suggestion.pdf');
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //

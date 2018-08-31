@@ -9,7 +9,7 @@
             <strong>Upload</strong> Form
         </div>
         <div class="card-body card-block">
-            <form action="{{route('handle_import')}}" method="post"  enctype="multipart/form-data" class="form-horizontal">
+            <form action="{{route('import-excel')}}" method="post"  enctype="multipart/form-data" class="form-horizontal">
                 {{csrf_field()}}
 
                 <div class="row form-group">
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button  class="btn btn-danger ">
+                    <button  class="btn btn-primary ">
                         <i class="fa fa-upload"></i> Upload
                     </button>
                 </div>

@@ -25,6 +25,27 @@
         <form action="{{route('store')}}" method="post" class="">
             {{ csrf_field() }}
             <div class="form-group">
+                <label for="first_name" class=" form-control-label">First Name:</label>
+                <input type="text" id="first_name" name="first_name"  class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" required>
+                {{--<span class="help-block">Please the Registration Number</span>--}}
+                @if ($errors->has('first_name'))
+                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('first_name') }}</strong>
+                                    </span>
+                @endif
+            </div>
+            <div class="form-group">
+                <label for="last_name" class=" form-control-label">Last Name:</label>
+                <input type="text" id="last_name" name="last_name"  class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" required>
+                {{--<span class="help-block">Please the Registration Number</span>--}}
+                @if ($errors->has('last_name'))
+                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('last_name') }}</strong>
+                                    </span>
+                @endif
+            </div>
+
+            <div class="form-group">
                 <label for="reg" class=" form-control-label">Registration Number:</label>
                 <input type="text" id="reg" name="reg"  class="form-control{{ $errors->has('reg') ? ' is-invalid' : '' }}" required>
                 {{--<span class="help-block">Please the Registration Number</span>--}}
@@ -37,7 +58,7 @@
 
 
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-lg>
+                <button type="submit" class="btn btn-primary btn-lg">
                     <i class="fa fa-dot-circle-o"></i> Submit
                 </button>
                 <button type="reset" class="btn btn-danger btn-sm">

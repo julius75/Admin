@@ -15,11 +15,13 @@ Route::get('/', function () {
     return view('auth.login');
 });
 Route::get('my-charts','AdminController@charts')->name('chart');
-Route::get('add-user','AdminController@add_user')->name('add_user');
+//Route::get('add-user','AdminController@add_user')->name('add_user');
 Route::get('view-user','AdminController@view_users')->name('view_users');
 Route::get('warn-user','AdminController@warn_users')->name('warn_users');
 Route::get('feedback','AdminController@feedback')->name('feedback');
 Route::get('suggestion','AdminController@suggestion')->name('suggestion');
+Route::post('/send-reply/{id}','AdminController@send_reply');
+Route::get('print-suggestion','AdminController@print_suggestion')->name('print_suggestion');
 
 Route::get('/page-not-found',function (){
    return 123;
@@ -33,10 +35,13 @@ Route::middleware(['auth'])->group(function (){
         Route::get('/home', 'HomeController@index')->name('home');
         Route::get('/home','AdminController@home')->name('admin_home');
         Route::get('/add-user','AdminController@add_user')->name('add_user');
+        Route::get('/delete/user/{id}','AdminController@delete_user');
+        Route::get('/edit/user/{id}','AdminController@edit_user');
+        Route::post('/update/user/{id}','AdminController@update_user');
 
             //import users from excel
-          Route::get('import-user','AdminController@import_user')->name('import_user');
-            Route::post('import-user','AdminController@handle_import')->name('handle_import');
+          Route::get('/import-user','AdminController@import_user')->name('import_user');
+           Route::post('/user','AdminController@handle_import')->name('import-excel');
 
 
 
