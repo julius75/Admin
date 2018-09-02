@@ -8,6 +8,6 @@ class Students extends Model
 {
     //
     protected $fillable=[
-        'reg','first_name','last_name','password'
+        'reg','first_name','last_name','password','email',
     ];
 }

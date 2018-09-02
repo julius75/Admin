@@ -16,7 +16,7 @@
                 <p>{{$suggestions->description}}</p>
                 @if($sugg=\App\Suggestion::where('id',$suggestions->id)->first())
                     @if($sugg->reply!=null)
-                        <a href="" class="btn btn-secondary btn-sm" id="1" name="view_reply">View Reply</a>
+                        <button href="" class="btn btn-secondary btn-sm" id="1" name="view_reply" disabled>Replied</button>
                         @else
                         <button id="reply{{$suggestions->id}}" class="btn btn-primary btn-sm">Reply</button>
                     @endif

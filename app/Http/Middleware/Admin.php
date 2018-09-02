@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 
-class AdminMiddleware
+class Admin
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,10 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->user_type!='admin'){
+        if ($request->user()->user_type!='admin'){
             return redirect('/page-not-found');
         }
-        return $next($request);
+            return $next($request);
+
     }
 }

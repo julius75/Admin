@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReplyMail;
 use App\Suggestion;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use  App\Students;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +19,10 @@ class AdminController extends Controller
 {
 
     public function home(){
-        return view('/home');
+        $users=Students::count();
+        $suggestions=Suggestion::count();
+        $feedback=Suggestion::whereNotNull('reply')->count();
+        return view('/home',compact('users','suggestions','feedback'));
     }
     public function add_user(){
         return view('users.add_user');
@@ -152,6 +159,7 @@ class AdminController extends Controller
                 'first_name'=>$request->input('first_name'),
                 'last_name'=>$request->input('last_name'),
                 'reg'=>$request->input('reg'),
+                'email'=>$request->input('email'),
                 'password'=>Hash::make($request->input('reg')),
 
             ]);
@@ -178,6 +186,10 @@ class AdminController extends Controller
                 ->update([
                     'reply'=>$request->input('reply'),
                 ]);
+            $email=Suggestion::where('id',$id)->first();
+            $stud_email=Students::where('id',$email->user_id)->first();
+            $suggestions=Suggestion::where('id',$id)->first();
+            Mail::to($stud_email->email)->send(new ReplyMail($suggestions));
             if ($response){
                 flash('Feedback on '.$suggestion->title.' Successfully sent')->success()->important();
                 return redirect()->back();
@@ -200,6 +212,14 @@ class AdminController extends Controller
     public function show($id)
     {
         //
+    }
+    public function view_feedbacks(){
+        $suggestions=DB::table('suggestions')
+            ->whereNotNull('reply')
+            ->orderBy('created_at','desc')
+            ->paginate(10);
+        $number=1;
+        return view('users.view_feedback',compact('suggestions','number'));
     }
 
     /**
@@ -234,5 +254,9 @@ class AdminController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function check_admin(){
+
+        return view('check');
     }
 }

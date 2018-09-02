@@ -56,6 +56,18 @@
                 @endif
             </div>
 
+            <div class="form-group">
+                <label for="email" class=" form-control-label">Student Email:</label>
+                <input type="email" id="email" name="email"  class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" required>
+                {{--<span class="help-block">Please the Registration Number</span>--}}
+                @if ($errors->has('email'))
+                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                @endif
+            </div>
+
+
 
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary btn-lg">

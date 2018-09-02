@@ -73,13 +73,15 @@
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
                     <li class="active has-sub">
+                        <img src="{{url('storage/images/app_icon.png')}}"  style="border-radius: 50%;height: 100px;">
                         <a class="js-arrow" href="{{route('admin_home')}}">
+
                             <i class="fas fa-tachometer-alt"></i>Dashboard</a>
 
                     </li>
                     <li class="has-sub">
                         <a class="js-arrow" href="#">
-                            <i class="fas fa-copy"></i>Users</a>
+                            <i class="fas fa-user"></i>Users</a>
                         <ul class="list-unstyled navbar__sub-list js-sub-list">
                             <li>
                                 <a href="{{route('add_user')}}">Add Users</a>
@@ -97,7 +99,7 @@
                             <i class="fas fa-table"></i>Suggestions</a>
                     </li>
                     <li>
-                        <a href="{{route('add_user')}}">
+                        <a href="{{route('view_feedbacks')}}">
                             <i class="far fa-check-square"></i>Feedbacks</a>
                     </li>
                     <li class="has-sub">

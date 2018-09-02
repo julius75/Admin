@@ -15,7 +15,8 @@ class CreateSuggestionsTable extends Migration
     {
         Schema::create('suggestions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('students');
             $table->string('title');
             $table->text('description');
             $table->text('reply')->nullable();
