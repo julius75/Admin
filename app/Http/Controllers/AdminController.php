@@ -58,7 +58,7 @@ class AdminController extends Controller
                 'first_name' => $row['first_name'],
                 'last_name' => $row['last_name'],
                 'reg' => $row['reg'],
-              'password' => bcrypt($row['password']),
+              'password' => md5($row['password']),
                // 'password' =>$row['password'],
 
 
@@ -160,7 +160,7 @@ class AdminController extends Controller
                 'last_name'=>$request->input('last_name'),
                 'reg'=>$request->input('reg'),
                 'email'=>$request->input('email'),
-                'password'=>Hash::make($request->input('reg')),
+                'password'=>md5($request->input('reg')),
 
             ]);
             if($student_save){
